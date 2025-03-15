@@ -1,12 +1,13 @@
 "use client";
 
-import { Home, Search, Bell, Mail, User, LogOut } from "lucide-react";
+import { Home, Search, Bell, Mail, LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
+import { useEffect } from "react";
 
 const Sidebar = () => {
   const { user } = useUser();
-
+  // console.log(user)
   return (
     <aside className="w-full md:w-64 min-h-screen bg-[#0b1016] text-white p-4 border-r border-gray-700 fixed left-0 top-0 flex flex-col">
       <SignedIn>
@@ -14,7 +15,7 @@ const Sidebar = () => {
           <img src={user?.imageUrl} className="w-12 h-12 rounded-full" alt="Profile" />
           <div>
             <p className="font-semibold">{user?.fullName}</p>
-            <p className="text-gray-400 text-sm">@{user?.username || "username"}</p>
+            <p className="text-gray-400 text-sm">@{user?.firstName || "username"}</p>
           </div>
         </div>
       </SignedIn>

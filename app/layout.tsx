@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
@@ -16,14 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
     <html lang="en">
-      <body
-        className={`${spaceGrotesk.className} antialiased`}
-      >
-        {children}
+      <body className={spaceGrotesk.className}>
+        <ClerkProvider>{children}</ClerkProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }
