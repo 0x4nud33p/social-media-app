@@ -1,8 +1,9 @@
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="flex justify-center">
-      <h1>Social-media-webapp</h1>
+    <div className="bg-black min-h-screen text-white">
+      <Navbar />
     </div>
   );
 }
