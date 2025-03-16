@@ -3,20 +3,21 @@
 import { Home, Search, Bell, Mail, LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
+import PopupCard from "@/components/ui/PopupCard";
 
 const Sidebar = () => {
   const { user } = useUser();
-  // console.log(user)
+
   return (
     <aside className="w-full md:w-64 min-h-screen bg-[#0b1016] text-white p-4 border-r border-gray-700 fixed left-0 top-0 flex flex-col">
       <SignedIn>
         <div className="flex items-center space-x-3 mb-6">
-          <img src={user?.imageUrl} className="w-12 h-12 rounded-full" alt="Profile" />
-          <div>
-            <p className="font-semibold">{user?.fullName}</p>
-            <p className="text-gray-400 text-sm">@{user?.firstName || "username"}</p>
-          </div>
+          <PopupCard user={{ 
+            fullName: user?.fullName || '', 
+            firstName: user?.firstName || '', 
+            imageUrl: user?.imageUrl || '', 
+            // emailAddress: user?.primaryEmailAddress
+          }} />
         </div>
       </SignedIn>
 
