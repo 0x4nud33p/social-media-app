@@ -1,21 +1,19 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import PostCard from "./ui/PostCard";
+import PostComponent from "./ui/PostComponent";
 
 const Feed = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+  const posts = [{}];
   return (
-    <main className="w-full md:w-2/3 mx-auto p-4">
+    <div className="w-full">
       <div className="p-4 border-b border-gray-700">
         <PostCard />
       </div>
-      <div>
-        {/* posts will be rendered here */}
-      </div>
-    </main>
+      {posts.map((post, index) => (
+        <div key={index} className={`p-4 border-b border-gray-700 ${index === posts.length - 1 ? 'border-b-0' : ''}`}>
+          <PostComponent postData={post} />
+        </div>
+      ))}
+    </div>
   );
 };
 

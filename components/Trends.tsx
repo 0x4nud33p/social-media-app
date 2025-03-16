@@ -1,10 +1,7 @@
-"use client";
-
 import { useEffect, useState } from "react";
 
 const Trends = () => {
   const [trends, setTrends] = useState([]);
-
   useEffect(() => {
     async function fetchTrends() {
       try {
@@ -17,9 +14,8 @@ const Trends = () => {
     }
     fetchTrends();
   }, []);
-
   return (
-    <aside className="w-full lg:w-64 bg-[#0b1016] text-white p-4 border-l border-gray-700">
+    <aside className="w-full md:w-64 bg-[#0b1016] text-white p-4 border-l border-gray-700 hidden lg:block">
       <h2 className="text-xl font-semibold mb-4">Trending</h2>
       <ul className="space-y-4">
         {trends.length > 0 ? (
