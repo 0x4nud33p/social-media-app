@@ -17,22 +17,13 @@ const PopupCard: React.FC<PopupCardProps> = ({ isOpen, closeModal, title, childr
           <h3 className="text-lg font-semibold">{title || "Modal"}</h3>
           <button
             onClick={closeModal}
-            className="text-gray-500 hover:text-gray-700 hover:cursor-pointer"
+            className="text-gray-400 hover:text-gray-200 hover:cursor-pointer"
           >
             ✕
           </button>
         </div>
 
         <div className="py-4">{children}</div>
-
-        <div className="mt-4 text-center">
-          <button
-            onClick={closeModal}
-            className="px-4 py-2 text-white rounded-lg bg-blue-500 hover:cursor-pointer"
-          >
-            Close
-          </button>
-        </div>
       </div>
     </div>
   );
