@@ -1,50 +1,41 @@
 "use client";
 
-import { Card, CardContent } from "./Card";
-import { useState } from "react";
-
 interface PopupCardProps {
-  user: {
-    fullName: string;
-    firstName?: string;
-    imageUrl: string;
-    emailAddress?: string;
-  };
+  isOpen: boolean;
+  closeModal: () => void;
+  title?: string;
+  children: React.ReactNode;
 }
 
-export default function PopupCard({ user }: PopupCardProps) {
-  const [visible, setVisible] = useState(false);
+const PopupCard: React.FC<PopupCardProps> = ({ isOpen, closeModal, title, children }) => {
+  if (!isOpen) return null;
 
   return (
-    <div className="relative">
-      <button onClick={() => setVisible(!visible)}>
-        <img
-          src={user?.imageUrl}
-          className="w-12 h-12 rounded-full cursor-pointer"
-          alt="Profile"
-        />
-      </button>
-
-      {visible && (
-        <div className="absolute top-14 left-0 w-64 z-50">
-          <Card>
-            <CardContent>
-              <div className="flex flex-col items-center space-y-2">
-                <img src={user?.imageUrl} className="w-16 h-16 rounded-full" alt="Profile" />
-                <p className="text-white font-semibold">{user?.fullName}</p>
-                <p className="text-gray-400 text-sm">@{user?.firstName || "username"}</p>
-                <p className="text-gray-500 text-xs">{user?.emailAddress}</p>
-                <button
-                  onClick={() => setVisible(false)}
-                  className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                >
-                  Close
-                </button>
-              </div>
-            </CardContent>
-          </Card>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="p-6 rounded-lg shadow-lg w-96 bg-[#1f2833]">
+        <div className="flex justify-between items-center border-b pb-4">
+          <h3 className="text-lg font-semibold">{title || "Modal"}</h3>
+          <button
+            onClick={closeModal}
+            className="text-gray-500 hover:text-gray-700 hover:cursor-pointer"
+          >
+            ✕
+          </button>
         </div>
-      )}
+
+        <div className="py-4">{children}</div>
+
+        <div className="mt-4 text-center">
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 text-white rounded-lg bg-blue-500 hover:cursor-pointer"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default PopupCard;
