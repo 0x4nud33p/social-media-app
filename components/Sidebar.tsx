@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Home, Search, Bell, Mail, LogOut, User } from "lucide-react";
-import { SignedIn, SignedOut, SignInButton, useUser, useClerk } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useUser, useClerk, isLoaded } from "@clerk/nextjs";
 import PopupCard from "@/components/ui/PopupCard";
 
 const Sidebar = () => {
