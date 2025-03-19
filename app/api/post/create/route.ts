@@ -18,10 +18,10 @@ export async function POST(req: NextRequest) {
     if (!existingUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-    
+
     const post = await prisma.post.create({
       data: {
-        title,
+        title: title || "",
         content,
         authorId: existingUser.id,
       },

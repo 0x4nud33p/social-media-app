@@ -34,14 +34,14 @@ const Sidebar = () => {
 
       <nav className="flex flex-col flex-grow space-y-2">
         {[ 
-          { href: "/", icon: Home, label: "Home" },
-          { href: "/explore", icon: Search, label: "Explore" },
-          { href: "#", icon: Pencil, label: "Post", onClick:toggleCreatePostModal },
-          { href: "#", icon: Bell, label: "Notifications", onClick: toggleNotificationsModal },
-          { href: "/messages", icon: Mail, label: "Messages" },
-        ].map(({ href, icon: Icon, label, onClick }) => (
+          { id : 1, href: "/", icon: Home, label: "Home" },
+          { id : 2, href: "/explore", icon: Search, label: "Explore" },
+          { id : 3, href: "#", icon: Pencil, label: "Post", onClick:toggleCreatePostModal },
+          { id : 4, href: "#", icon: Bell, label: "Notifications", onClick: toggleNotificationsModal },
+          { id : 5, href: "/messages", icon: Mail, label: "Messages" },
+        ].map(({ id, href, icon: Icon, label, onClick }) => (
           <button 
-            key={href} 
+            key={id} 
             onClick={onClick} 
             className="flex items-center space-x-3 p-3 hover:bg-gray-800 rounded-lg w-full text-left"
             aria-label={label}

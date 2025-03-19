@@ -2,18 +2,43 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Camera, Video, Link, Calendar } from "lucide-react";
+import { Camera } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 
 export default function PostCard() {
   const [text, setText] = useState("");
-  const { user } = useUser();
+  const [title, setTitle] = useState("");
+  const { user, isLoaded } = useUser();
+
+  const createPost = async () => {
+    try {
+      const response = await fetch("/api/post/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title || "",
+          content: text,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create post");
+      }
+
+      const data = await response.json();
+      console.log("Post created:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center space-y-4">
       <div className="w-full max-w-lg bg-gray-900 p-4 rounded-xl shadow-md">
         <div className="flex items-start space-x-3">
-          {user?.imageUrl && (
+          {isLoaded && user?.imageUrl && (
             <Image
               src={user.imageUrl}
               alt="Profile Picture"
@@ -35,13 +60,15 @@ export default function PostCard() {
               <button className="p-2 rounded-full text-green-500 hover:bg-green-600/20">
                 <Camera size={20} />
               </button>
-              {/* add multiple options in future like user able to upload video, links */}
             </div>
           </div>
         </div>
       </div>
 
-      <button className="w-full max-w-lg py-2 rounded-xl text-white bg-blue-500 hover:bg-blue-600 transition hover:cursor-pointer">
+      <button
+        className="w-full max-w-lg py-2 rounded-xl text-white bg-blue-500 hover:bg-blue-600 transition hover:cursor-pointer"
+        onClick={createPost}
+      >
         Post
       </button>
     </div>
