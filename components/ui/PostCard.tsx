@@ -4,14 +4,17 @@ import Image from "next/image";
 import { useState } from "react";
 import { Camera } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
 
-export default function PostCard() {
+export default function PostCard({closeModal} : any) {
   const [text, setText] = useState("");
+  const [loading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const { user, isLoaded } = useUser();
 
   const createPost = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch("/api/post/create", {
         method: "POST",
         headers: {
@@ -22,15 +25,19 @@ export default function PostCard() {
           content: text,
         }),
       });
-
       if (!response.ok) {
+        toast.error("Failed to create post");
         throw new Error("Failed to create post");
+      } else {
+        toast.success("Post created successfully!!");
+        closeModal();
       }
-
       const data = await response.json();
-      console.log("Post created:", data);
     } catch (error) {
       console.error("Error:", error);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 

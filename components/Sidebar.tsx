@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Home, Search, Bell, Mail, LogOut, User, Pencil } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, useUser, useClerk } from "@clerk/nextjs";
 import PopupCard from "@/components/ui/PopupCard";
@@ -18,6 +18,16 @@ const Sidebar = () => {
   const toggleProfileModal = () => setIsProfileOpen((prev) => !prev);
   const toggleNotificationsModal = () => setIsNotificationsOpen((prev) => !prev);
   const toggleCreatePostModal = () => setCreatePostOpen((prev) => !prev);
+
+  useEffect(() => {
+    const createUser = async () => {
+      if (user) {
+        await fetch("/api/auth/callback", { method: "GET" });
+      }
+    };
+
+    createUser();
+  }, [user]);
 
   return (
     <aside className="w-full md:w-64 min-h-screen bg-[#0b1016] text-white p-4 border-r border-gray-700 fixed md:static left-0 top-0 flex flex-col">
@@ -88,7 +98,7 @@ const Sidebar = () => {
       {
         isCreatePostOpen && (
           <PopupCard isOpen={isCreatePostOpen} closeModal={() => setCreatePostOpen(false)} title="Create Post">
-          <PostCard />
+          <PostCard closeModal={() => setCreatePostOpen(false)}/>
         </PopupCard>
         )
       }

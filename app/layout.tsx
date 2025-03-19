@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={spaceGrotesk.className}>
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider>
+          <Toaster richColors position="bottom-right" />
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );
