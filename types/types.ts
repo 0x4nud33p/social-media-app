@@ -23,9 +23,9 @@ export interface ProfileType extends Profile {
 
 // Post Type
 export interface PostType extends Post {
-  author: UserType;
-  likedBy: UserType[];
-  comments: CommentType[];
+  author? : UserType;
+  likedBy? : UserType[];
+  comments? : CommentType[];
 }
 
 // Comment Type

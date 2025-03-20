@@ -12,9 +12,18 @@ export async function GET(req: NextRequest): Promise<NextResponse<RecentPostsRes
     const recentPosts = await prisma.post.findMany({
       orderBy: { createdAt: "desc" },
       take: 30,
+      include: {
+        author: {
+          select: {
+            fullName: true,
+            avatar: true,
+          },
+        },
+      },
     });
 
-    // @ts-ignore
+    console.log("recent posts", recentPosts);
+    //@ts-ignore
     return NextResponse.json({ data: recentPosts }, { status: 200 });
   } catch (error) {
     console.error("Error fetching recent posts:", error);
@@ -23,7 +32,6 @@ export async function GET(req: NextRequest): Promise<NextResponse<RecentPostsRes
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

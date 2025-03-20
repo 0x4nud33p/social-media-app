@@ -1,26 +1,24 @@
+"use client";
+
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import PostComponent from "./ui/PostComponent";
+import { PostType } from "@/types/types";
 
 const Feed = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setIsLoading] = useState(false);
 
   async function getPosts() {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/posts", {
-        method: "GET",
-      });
-
-      console.log("response while fetching posts",res);
-
+      const res = await fetch("/api/posts");
       if (!res.ok) {
         throw new Error("Failed to fetch posts");
       }
-
-      const data = await res.json();
-      setPosts(data.data || []);
+      const jsonResponse = await res.json();
+      console.log("json response",jsonResponse.data);
+      setPosts(jsonResponse.data);
     } catch (error) {
       toast.error("Error while fetching posts");
       console.error("Error:", error);
@@ -37,10 +35,10 @@ const Feed = () => {
     <div className="w-full">
       {loading ? (
         <p className="bg-white">Loading...</p>
-      ) : (
+      ) : posts?.length > 0 ? (
         posts.map((post, index) => (
           <div
-            key={index}
+            key={post.id} 
             className={`p-4 border-b border-gray-700 ${
               index === posts.length - 1 ? "border-b-0" : ""
             }`}
@@ -48,6 +46,8 @@ const Feed = () => {
             <PostComponent postData={post} />
           </div>
         ))
+      ) : (
+        <p className="text-gray-500 text-center mt-4">No posts available</p>
       )}
     </div>
   );
