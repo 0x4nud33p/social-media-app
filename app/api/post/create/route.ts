@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
         authorId: existingUser.id,
       },
     });
-    console.log("post stored in db",post);
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     console.error("Error creating post:", error);

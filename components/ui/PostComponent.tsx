@@ -9,7 +9,7 @@ interface PostProps {
       username: string;
     };
     content: string;
-    timestamp: string;
+    timestamp?: string;
     text?: string;
     image?: string;
     likeCount: number;

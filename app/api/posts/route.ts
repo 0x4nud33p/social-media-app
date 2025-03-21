@@ -21,8 +21,6 @@ export async function GET(req: NextRequest): Promise<NextResponse<RecentPostsRes
         },
       },
     });
-
-    console.log("recent posts", recentPosts);
     //@ts-ignore
     return NextResponse.json({ data: recentPosts }, { status: 200 });
   } catch (error) {

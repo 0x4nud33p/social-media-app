@@ -17,7 +17,6 @@ const Feed = () => {
         throw new Error("Failed to fetch posts");
       }
       const jsonResponse = await res.json();
-      console.log("json response",jsonResponse.data);
       setPosts(jsonResponse.data);
     } catch (error) {
       toast.error("Error while fetching posts");
@@ -32,13 +31,13 @@ const Feed = () => {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-[750px] overflow-auto rounded-lg">
       {loading ? (
-        <p className="bg-white">Loading...</p>
+        <p className="bg-white text-center p-4">Loading...</p>
       ) : posts?.length > 0 ? (
         posts.map((post, index) => (
           <div
-            key={post.id} 
+            key={post.id}
             className={`p-4 border-b border-gray-700 ${
               index === posts.length - 1 ? "border-b-0" : ""
             }`}
