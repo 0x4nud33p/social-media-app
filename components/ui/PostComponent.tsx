@@ -1,6 +1,6 @@
 "use client";
 
-import { Maximize2 } from "lucide-react";
+import { Maximize2, Heart, MessageCircle, Share2, Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import PopupCard from "./PopupCard";
 
@@ -72,9 +72,17 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
       )}
 
       <div className="flex justify-between items-center text-gray-400 mt-3 text-sm">
-        <button className="hover:text-blue-500">{postData.likeCount} Likes</button>
-        <button className="hover:text-blue-500">{postData.commentCount} Comments</button>
-        <button className="hover:text-blue-500">Share</button>
+        <button className="flex items-center gap-1 hover:text-blue-500">
+          <Heart size={20} />
+          <span>{postData.likeCount}</span>
+        </button>
+        <button className="flex items-center gap-1 hover:text-blue-500">
+          <MessageCircle size={20} />
+          <span>{postData.commentCount}</span>
+        </button>
+        <button className="hover:text-blue-500">
+          <Share2 size={20} />
+        </button>
       </div>
       {  viewFullPost && (
     <PopupCard isOpen={viewFullPost} closeModal={() => setViewFullPost(false)}>
@@ -119,10 +127,32 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
                   <p className="text-gray-300 text-sm">{comment.content}</p>
                   <p className="text-gray-500 text-xs">{formatDate(comment.createdAt)}</p>
                 </div>
+                <div className="flex items-center gap-2 border border-gray-700 rounded-lg p-2 mt-3">
+                <input
+                  type="text"
+                  placeholder="Add a comment..."
+                  className="w-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
+                />
+                <button className="text-blue-500 hover:text-blue-600">
+                  <Send size={20} />
+                </button>
+              </div>
               </div>
             ))
           ) : (
-            <p className="text-gray-500 text-sm">No comments yet.</p>
+            <div>
+              <p className="text-gray-500 text-sm">No comments yet.</p>
+              <div className="flex items-center gap-2 border border-gray-700 rounded-lg p-2 mt-3">
+                <input
+                  type="text"
+                  placeholder="Add a comment..."
+                  className="w-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
+                />
+                <button className="text-blue-500 hover:text-blue-600">
+                  <Send size={20} />
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
