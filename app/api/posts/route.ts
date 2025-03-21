@@ -19,6 +19,20 @@ export async function GET(req: NextRequest): Promise<NextResponse<RecentPostsRes
             avatar: true,
           },
         },
+        comments : {
+          orderBy : { createdAt : "asc"},
+          select : {
+            id : true,
+            content: true,
+            createdAt: true,
+            author: {
+              select: {
+                fullName: true,
+                avatar: true,
+              },
+            },
+          }
+        }
       },
     });
     //@ts-ignore
