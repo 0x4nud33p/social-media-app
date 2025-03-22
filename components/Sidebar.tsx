@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Home, Search, Bell, Mail, LogOut, User, Pencil } from "lucide-react";
+import { Home, Search, Bell, Mail, LogOut, User, Pencil, Send } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, useUser, useClerk } from "@clerk/nextjs";
 import PopupCard from "@/components/ui/PopupCard";
 import PostCard from "./ui/PostCard";
+import { toast } from "sonner";
 
 const Sidebar = () => {
   const { user } = useUser();
@@ -14,11 +15,33 @@ const Sidebar = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isCreatePostOpen, setCreatePostOpen] = useState(false);
   const [isExploreOpen, setExploreOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleProfileModal = () => setIsProfileOpen((prev) => !prev);
   const toggleNotificationsModal = () => setIsNotificationsOpen((prev) => !prev);
   const toggleCreatePostModal = () => setCreatePostOpen((prev) => !prev);
+  const toggleExploreModal = () => setExploreOpen((prev) => !prev);
 
+  async function searchByFullname() {
+    if (!searchTerm.trim()) return; 
+    try {
+      const res = await fetch("/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: searchTerm }),
+      });
+      
+      if (res.status == 404) {
+        toast.error("user not found");
+        return;
+      }
+      const data = await res.json();
+      console.log("Search results:", data);
+    } catch (error) {
+      console.error("Error while searching for a user:", error);
+    }
+  }
+  
   useEffect(() => {
     const createUser = async () => {
       if (user) {
@@ -44,8 +67,7 @@ const Sidebar = () => {
 
       <nav className="flex flex-col flex-grow space-y-2">
         {[ 
-          { id : 1, href: "/", icon: Home, label: "Home" },
-          { id : 2, href: "/explore", icon: Search, label: "Explore" },
+          { id : 2, href: "/explore", icon: Search, label: "Explore", onClick:toggleExploreModal },
           { id : 3, href: "#", icon: Pencil, label: "Post", onClick:toggleCreatePostModal },
           { id : 4, href: "#", icon: Bell, label: "Notifications", onClick: toggleNotificationsModal },
           { id : 5, href: "/messages", icon: Mail, label: "Messages" },
@@ -110,6 +132,33 @@ const Sidebar = () => {
             <p className="text-gray-300">📢 New post from <b>User A</b>!</p>
             <p className="text-gray-300">🔔 You got 5 new likes!</p>
             <p className="text-gray-300">💬 Someone commented on your post.</p>
+          </div>
+        </PopupCard>
+      )}
+
+      {/* popups search bar */}
+      {isExploreOpen && (
+        <PopupCard 
+          isOpen={isExploreOpen} 
+          closeModal={() => setExploreOpen(false)} 
+          title="Search"
+        >
+          <div className="flex items-center gap-2 border border-gray-400 rounded-lg p-2">
+            <input
+              type="text"
+              placeholder="Search by fullname..."
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && searchByFullname()}
+              className="flex-1 p-2 outline-none border-none"
+              aria-label="Search user by full name"
+            />
+            <button 
+              className="text-blue-500 hover:text-blue-600 transition-all" 
+              onClick={searchByFullname}
+              aria-label="Search"
+            >
+              <Send size={20} />
+            </button>
           </div>
         </PopupCard>
       )}
