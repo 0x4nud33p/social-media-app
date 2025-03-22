@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import MessageComponent from "./ui/MessageComponent";
 
 const Trends = () => {
   const [trends, setTrends] = useState([]);
 
   return (
-    <aside className="w-full md:w-64 bg-[#0b1016] text-white p-4 border-l border-gray-700 hidden lg:block">
-      <h2 className="text-xl font-semibold mb-4">Trending</h2>
+    <aside className="w-full md:w-74 bg-[#0b1016] text-white p-4 border-l border-gray-700 hidden lg:block">
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Trending</h2>
       <ul className="space-y-4">
         {trends.length > 0 ? (
           trends.map((trend, index) => (
@@ -18,6 +20,8 @@ const Trends = () => {
           <p className="text-gray-400 text-sm">No trending topics right now.</p>
         )}
       </ul>
+      <MessageComponent />
+      </div>
     </aside>
   );
 };
