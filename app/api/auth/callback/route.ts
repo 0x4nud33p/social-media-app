@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         data: {
           clerkId: user.id,
           email: user.primaryEmailAddress.emailAddress,
-          username: user.fullName?.split("").join("") || user.id,
+          username: user.fullName?.split(" ")[0] || user.id,
           fullName: user.fullName || "Unknown",
           avatar: user.imageUrl,
         },

@@ -15,6 +15,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // const allusers = await prisma.user.findMany({}); //fetch all users from the db
+    // console.log(allusers);
+
     const existingUser = await prisma.user.findUnique({
       where: { username: slug },
     });
