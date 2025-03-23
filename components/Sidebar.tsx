@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { Home, Search, Bell, Mail, LogOut, User, Pencil, Send } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, useUser, useClerk } from "@clerk/nextjs";
@@ -20,6 +19,7 @@ const Sidebar = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<UserType[]>([]);
+  const [selectedUser, setSelectedUser] = useState<UserType>();
 
   type ModalKeys = 'profile' | 'notifications' | 'createPost' | 'explore';
 
@@ -49,10 +49,14 @@ const Sidebar = () => {
   }, [searchTerm]);
 
   useEffect(() => {
-    if (user) {
+    try {
+      if (user) {
       fetch("/api/auth/callback", { method: "GET" });
     }
-  }, [user]);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [user?.id]);
 
   return (
     <aside className="w-full md:w-64 min-h-screen bg-[#0b1016] text-white p-4 border-r border-gray-700 fixed md:static left-0 top-0 flex flex-col">
@@ -128,7 +132,7 @@ const Sidebar = () => {
                 placeholder="Search by full name..."
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && searchByFullname()}
-                className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-500"
+                className="flex-1 bg-transparent outline-none text-white placeholder-gray-500"
               />
               <button className="text-blue-500 hover:text-blue-600" onClick={searchByFullname}>
                 <Send size={20} />
@@ -137,7 +141,14 @@ const Sidebar = () => {
             {searchResults.length > 0 && (
               <ul className="max-h-40 overflow-y-auto border-t pt-2">
                 {searchResults.map((item) => (
-                  <li key={item.id} className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-md">
+                  <li 
+                  key={item.id} 
+                  className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-md"
+                  onClick={() => {
+                    setSelectedUser(item);
+                    toggleModal("explore");
+                  }}
+                  >
                     <img src={item.avatar || "userimage"} alt={item.username} className="w-10 h-10 rounded-full" />
                     <p className="text-white">{item.username}</p>
                   </li>

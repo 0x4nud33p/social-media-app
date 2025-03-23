@@ -3,16 +3,17 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import PostComponent from "./ui/PostComponent";
-import { PostType } from "@/types/types";
+import { PostType, UserType } from "@/types/types";
+import ProfileView from "@/components/ui/ProfileView";
 
-const Feed = () => {
+const Feed = ({selectedUser}) => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setIsLoading] = useState(false);
 
-  async function getPosts() {
+  async function getPosts(userId?: string) {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/posts");
+      const res = await fetch(userId ? `/api/posts?userId=${userId}` : "/api/posts");
       if (!res.ok) {
         throw new Error("Failed to fetch posts");
       }
@@ -27,20 +28,20 @@ const Feed = () => {
   }
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    getPosts(selectedUser?.id);
+  }, [selectedUser]);
 
   return (
     <div className="w-full h-[750px] overflow-auto rounded-lg">
-      {loading ? (
+      {selectedUser ? (
+        <ProfileView user={selectedUser} /> //onBack={() => setSelectedUser(null)} 
+      ) : loading ? (
         <p className="bg-white text-center p-4">Loading...</p>
-      ) : posts?.length > 0 ? (
+      ) : posts.length > 0 ? (
         posts.map((post, index) => (
           <div
             key={post.id}
-            className={`p-4 border-b border-gray-700 ${
-              index === posts.length - 1 ? "border-b-0" : ""
-            }`}
+            className={`p-4 border-b border-gray-700 ${index === posts.length - 1 ? "border-b-0" : ""}`}
           >
             <PostComponent postData={post} />
           </div>
