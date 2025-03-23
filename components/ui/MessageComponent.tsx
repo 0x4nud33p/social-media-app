@@ -10,10 +10,10 @@ const MessageComponent = () => {
 
   return (
     <motion.div
-      className={`fixed bottom-0 right-4 w-[350px] bg-gray-900 border border-gray-700 rounded-t-xl overflow-hidden transition-all ${
-        expanded ? "h-[80vh]" : "h-[60px]"
+      className={`fixed bottom-2 right-0 w-[370px] bg-gray-900 border border-gray-700 rounded-t-xl overflow-hidden transition-all ${
+        expanded ? "h-[100vh]" : "h-[60px]"
       }`}
-      animate={{ height: expanded ? "80vh" : "60px" }}
+      animate={{ height: expanded ? "100vh" : "60px" }}
       transition={{ duration: 0.3 }}
     >
       <div className="flex justify-between items-center p-3 border-b border-gray-700">
@@ -27,7 +27,7 @@ const MessageComponent = () => {
         <p className="text-gray-400 text-sm">No messages yet.</p>
       </div>
 
-      <div className="flex items-center p-3 border-t border-gray-700">
+      {/* <div className="flex items-center p-3 border-t border-gray-700">
         <input
           type="text"
           placeholder="Type a message..."
@@ -38,7 +38,7 @@ const MessageComponent = () => {
         <button className="ml-2 text-blue-500 hover:text-blue-400 transition-all">
           <Send size={20} />
         </button>
-      </div>
+      </div> */}
     </motion.div>
   );
 };

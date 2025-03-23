@@ -15,18 +15,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // const allusers = await prisma.user.findMany({}); //fetch all users from the db
-    // console.log(allusers);
+    const allusers = await prisma.user.findMany({});
+    console.log(allusers);
 
-    const existingUser = await prisma.user.findUnique({
-      where: { username: slug },
-    });
+    const existingUsers = await prisma.user.findMany({
+    where: {
+      username: {
+        contains: slug,
+        mode: "insensitive",
+      },
+    },
+  });
 
-    if (!existingUser) {
+    console.log("user found",existingUsers);
+
+    if (!existingUsers) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ user: existingUser }, { status: 200 });
+    return NextResponse.json({ users: existingUsers }, { status: 200 });
 
   } catch (error) {
     console.error("Error while retrieving user:", error);
