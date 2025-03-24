@@ -27,7 +27,7 @@ async function getPosts(userId?: number, setPosts?: React.Dispatch<React.SetStat
 const Feed = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setIsLoading] = useState(false);
-  const { selectedUser } = useUserContext();
+  const { selectedUser,setSelectedUser } = useUserContext();
 
   useEffect(() => {
     getPosts(selectedUser?.id, setPosts, setIsLoading);
@@ -36,7 +36,7 @@ const Feed = () => {
   return (
     <div className="w-full h-[750px] overflow-auto rounded-lg">
       {selectedUser ? (
-        <ProfileView user={selectedUser} /> //onBack={() => setSelectedUser(null)} 
+        <ProfileView user={selectedUser} onBack={() => setSelectedUser(null)} />
       ) : loading ? (
         <p className="bg-white text-center p-4">Loading...</p>
       ) : posts.length > 0 ? (

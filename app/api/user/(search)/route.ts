@@ -15,9 +15,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const allusers = await prisma.user.findMany({});
-    console.log(allusers);
-
     const existingUsers = await prisma.user.findMany({
     where: {
       username: {
@@ -26,8 +23,6 @@ export async function POST(req: NextRequest) {
       },
     },
   });
-
-    console.log("user found",existingUsers);
 
     if (!existingUsers) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

@@ -20,6 +20,7 @@ const Sidebar = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<UserType[]>([]);
+  const [loading, setLoading] = useState(false);
   const { setSelectedUser } = useUserContext();
 
   type ModalKeys = 'profile' | 'notifications' | 'createPost' | 'explore';
@@ -31,21 +32,22 @@ const Sidebar = () => {
   const searchByFullname = useCallback(async () => {
     if (!searchTerm.trim()) return;
     try {
+      setLoading(true);
       const res = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug: searchTerm }),
       });
-      
       if (res.status === 404) {
         toast.error("User not found");
         return;
       }
-      
       const data = await res.json();
       setSearchResults(data?.users || []);
     } catch (error) {
       console.error("Error searching for user:", error);
+    } finally{
+      setLoading(false);
     }
   }, [searchTerm]);
 

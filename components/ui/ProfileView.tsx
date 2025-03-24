@@ -5,10 +5,10 @@ import { getPosts } from "../Feed";
 
 interface ProfileViewProps {
   user: UserType;
-  //onBack: () => void;
+  onBack: () => void;
 }
 
-const ProfileView: React.FC<ProfileViewProps> = ({ user }) => { //{ user, onBack }
+const ProfileView: React.FC<ProfileViewProps> = ({ user, onBack }) => {
   const [posts, setPosts] = useState<PostType[]>([]);
 
   useEffect(() => {
@@ -17,9 +17,9 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user }) => { //{ user, onBack
 
   return (
     <div className="p-4">
-      {/* <button className="mb-4 px-3 py-2 bg-gray-800 text-white rounded-lg" onClick={onBack}>
+      <button className="mb-4 px-3 py-2 bg-gray-800 text-white rounded-lg" onClick={onBack}>
         ← Back to Feed
-      </button> */}
+      </button>
       <div className="flex items-center space-x-4">
         <img src={user.avatar || ""} alt={user.username} className="w-16 h-16 rounded-full" />
         <div>
