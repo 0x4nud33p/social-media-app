@@ -7,6 +7,7 @@ import PopupCard from "@/components/ui/PopupCard";
 import PostCard from "./ui/PostCard";
 import { toast } from "sonner";
 import { UserType } from "@/types/types";
+import { useUserContext } from "@/hooks/UserContext";
 
 const Sidebar = () => {
   const { user } = useUser();
@@ -19,7 +20,7 @@ const Sidebar = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<UserType[]>([]);
-  const [selectedUser, setSelectedUser] = useState<UserType>();
+  const { setSelectedUser } = useUserContext();
 
   type ModalKeys = 'profile' | 'notifications' | 'createPost' | 'explore';
 

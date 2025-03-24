@@ -5,30 +5,32 @@ import { useEffect, useState } from "react";
 import PostComponent from "./ui/PostComponent";
 import { PostType, UserType } from "@/types/types";
 import ProfileView from "@/components/ui/ProfileView";
+import { useUserContext } from "@/hooks/UserContext";
 
-const Feed = ({selectedUser}) => {
+async function getPosts(userId?: number, setPosts?: React.Dispatch<React.SetStateAction<PostType[]>>, setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>) {
+  try {
+    if (setIsLoading) setIsLoading(true);
+    const res = await fetch(userId ? `/api/posts?userId=${userId}` : "/api/posts");
+    if (!res.ok) {
+      throw new Error("Failed to fetch posts");
+    }
+    const jsonResponse = await res.json();
+    if (setPosts) setPosts(jsonResponse.data);
+  } catch (error) {
+    toast.error("Error while fetching posts");
+    console.error("Error:", error);
+  } finally {
+    if (setIsLoading) setIsLoading(false);
+  }
+}
+
+const Feed = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setIsLoading] = useState(false);
-
-  async function getPosts(userId?: string) {
-    try {
-      setIsLoading(true);
-      const res = await fetch(userId ? `/api/posts?userId=${userId}` : "/api/posts");
-      if (!res.ok) {
-        throw new Error("Failed to fetch posts");
-      }
-      const jsonResponse = await res.json();
-      setPosts(jsonResponse.data);
-    } catch (error) {
-      toast.error("Error while fetching posts");
-      console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const { selectedUser } = useUserContext();
 
   useEffect(() => {
-    getPosts(selectedUser?.id);
+    getPosts(selectedUser?.id, setPosts, setIsLoading);
   }, [selectedUser]);
 
   return (
@@ -53,4 +55,7 @@ const Feed = ({selectedUser}) => {
   );
 };
 
-export default Feed;
+export {
+  getPosts,
+  Feed
+}
