@@ -4,6 +4,7 @@ import PopupCard from "./PopupCard";
 import React, { useState } from "react";
 import { formatDate } from "@/utils/formatdate";
 import { Maximize2, Heart, MessageCircle, Share2, Send } from "lucide-react";
+import { useUserContext } from "@/hooks/UserContext";
 
 interface PostProps {
   postData: {
@@ -11,6 +12,7 @@ interface PostProps {
     author: {
       avatar: string;
       fullName: string;
+      id : number;
     };
     content: string;
     createdAt?: string;
@@ -30,21 +32,20 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);
   const [commentText, setCommentText] = useState("");
 
-  async function addComment() {
+  async function addCommentfuc() {
     try {
       if (!commentText.trim()) return;
       
       const res = await fetch("/api/post/addcomment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ postId: postData.id, content: commentText }),
+        body: JSON.stringify({ postId: postData.id, content: commentText, userId: postData.author?.id }),
       });
-
+      console.log(res);
       if (!res.ok) {
         console.error("Failed to add comment");
         return;
       }
-
       setCommentText("");
     } catch (error) {
       console.error("Error while adding comment", error);
@@ -125,7 +126,7 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                 />
-                <button className="text-blue-500 hover:text-blue-600" onClick={addComment}>
+                <button className="text-blue-500 hover:text-blue-600" onClick={addCommentfuc}>
                   <Send size={20} />
                 </button>
               </div>

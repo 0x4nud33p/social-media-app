@@ -1,17 +1,15 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const { postId, userId, content } = req.body;
+    const { postId, userId, content } = await req.json();
+    console.log(postId);
+    console.log(userId);
+    console.log(content);
     if (!postId || !userId || !content.trim()) {
-      return res.status(400).json({ message: "Invalid request data" });
+      return NextResponse.json({ message: "Invalid request data" }, { status : 400});
     }
-
     const newComment = await prisma.comment.create({
       data: {
         content,
@@ -22,10 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         author: { select: { fullName: true, avatar: true } },
       },
     });
-
-    return res.status(201).json({ message: "Comment added successfully", newComment });
+    console.log(newComment);
+    return NextResponse.json({ message: "Comment added successfully", newComment }, { status : 201 });
   } catch (error) {
     console.error("Error adding comment:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return NextResponse.json({ message : "Internal Server Error"}, { status : 500 });
   }
 }

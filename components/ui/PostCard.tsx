@@ -6,6 +6,7 @@ import { Camera  } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
+// @dev to create a post component
 export default function PostCard({closeModal} : any) {
   const [text, setText] = useState("");
   const [loading, setIsLoading] = useState(false);
