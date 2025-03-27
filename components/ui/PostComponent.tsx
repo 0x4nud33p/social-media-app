@@ -1,8 +1,9 @@
 "use client";
 
-import { Maximize2, Heart, MessageCircle, Share2, Send } from "lucide-react";
-import React, { useState } from "react";
 import PopupCard from "./PopupCard";
+import React, { useState } from "react";
+import { formatDate } from "@/utils/formatdate";
+import { Maximize2, Heart, MessageCircle, Share2, Send } from "lucide-react";
 
 interface PostProps {
   postData: {
@@ -24,15 +25,6 @@ interface PostProps {
     }[];
   };
 }
-
-const formatDate = (dateString?: string) => {
-  if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
 
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);

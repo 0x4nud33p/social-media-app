@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.5",
+    "@coreui/coreui": "^5.2.0",
+    "@coreui/react": "^5.5.0",
     "@prisma/client": "^6.5.0",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.482.0",

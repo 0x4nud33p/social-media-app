@@ -3,7 +3,8 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import PostComponent from "./ui/PostComponent";
-import { PostType, UserType } from "@/types/types";
+import { Spinner } from "./ui/Loading";
+import { PostType } from "@/types/types";
 import ProfileView from "@/components/ui/ProfileView";
 import { useUserContext } from "@/hooks/UserContext";
 
@@ -26,8 +27,8 @@ async function getPosts(userId?: number, setPosts?: React.Dispatch<React.SetStat
 
 const Feed = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [loading, setIsLoading] = useState(false);
-  const { selectedUser,setSelectedUser } = useUserContext();
+  const [isLoading, setIsLoading] = useState(false);
+  const { selectedUser, setSelectedUser } = useUserContext();
 
   useEffect(() => {
     getPosts(selectedUser?.id, setPosts, setIsLoading);
@@ -35,10 +36,10 @@ const Feed = () => {
 
   return (
     <div className="w-full h-[750px] overflow-auto rounded-lg">
-      {selectedUser ? (
+      {isLoading ? (
+        <Spinner />
+      ) : selectedUser ? (
         <ProfileView user={selectedUser} onBack={() => setSelectedUser(null)} />
-      ) : loading ? (
-        <p className="bg-white text-center p-4">Loading...</p>
       ) : posts.length > 0 ? (
         posts.map((post, index) => (
           <div
@@ -55,7 +56,4 @@ const Feed = () => {
   );
 };
 
-export {
-  getPosts,
-  Feed
-}
+export { getPosts, Feed };
