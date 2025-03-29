@@ -1,7 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
-import {Feed} from "@/components/Feed";
+import Feed from "@/components/Feed";
 import Trends from "@/components/Trends";
 import { UserProvider } from "@/context/UserContext";
 

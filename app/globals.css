@@ -26,10 +26,13 @@ body {
 }
 
 
-.scrollbar-hide::-webkit-scrollbar {
+/* globals.css */
+.hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-.scrollbar-hide {
+.hide-scrollbar {
+  -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+

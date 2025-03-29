@@ -1,41 +1,29 @@
 "use client";
 
-import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { getPosts } from "@/lib/client_data_fetching/getPosts";
+import { PostType } from "@/types/types";
+import { useUserContext } from "@/hooks/UserContext";
 import PostComponent from "./ui/PostComponent";
 import { Spinner } from "./ui/Loading";
-import { PostType } from "@/types/types";
 import ProfileView from "@/components/ui/ProfileView";
-import { useUserContext } from "@/hooks/UserContext";
-
-async function getPosts(userId?: number, setPosts?: React.Dispatch<React.SetStateAction<PostType[]>>, setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>) {
-  try {
-    if (setIsLoading) setIsLoading(true);
-    const res = await fetch(userId ? `/api/posts?userId=${userId}` : "/api/posts");
-    if (!res.ok) {
-      throw new Error("Failed to fetch posts");
-    }
-    const jsonResponse = await res.json();
-    if (setPosts) setPosts(jsonResponse.data);
-  } catch (error) {
-    toast.error("Error while fetching posts");
-    console.error("Error:", error);
-  } finally {
-    if (setIsLoading) setIsLoading(false);
-  }
-}
+import "@/app/globals.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { selectedUser, setSelectedUser } = useUserContext();
 
-  useEffect(() => {
-    getPosts(selectedUser?.id, setPosts, setIsLoading);
+  const fetchPosts = useCallback(async () => {
+    await getPosts(selectedUser?.id, setPosts, setIsLoading);
   }, [selectedUser]);
 
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
   return (
-    <div className="w-full h-[750px] overflow-auto rounded-lg">
+    <div className="w-full h-[750px] overflow-auto rounded-lg hide-scrollbar">
       {isLoading ? (
         <Spinner />
       ) : selectedUser ? (
@@ -46,6 +34,7 @@ const Feed = () => {
             key={post.id}
             className={`p-4 border-b border-gray-700 ${index === posts.length - 1 ? "border-b-0" : ""}`}
           >
+            {/* @ts-ignore */}
             <PostComponent postData={post} />
           </div>
         ))
@@ -56,4 +45,4 @@ const Feed = () => {
   );
 };
 
-export { getPosts, Feed };
+export default Feed;

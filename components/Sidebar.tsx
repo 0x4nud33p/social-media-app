@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useClerk, SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
-import { LogOut, User } from "lucide-react";
-import { useUserContext } from "@/hooks/UserContext";
 import sidebarItems from "@/config/sidebar";
 import SidebarItem from "./ui/SideBarItems";
+import { LogOut, User } from "lucide-react";
+import { useUserContext } from "@/hooks/UserContext";
+import { useClerk, SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
 import { ProfilePopup, NotificationsPopup, CreatePostPopup, SearchPopup } from "./popup/exports";
 
 const Sidebar = () => {
