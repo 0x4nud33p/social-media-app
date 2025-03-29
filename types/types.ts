@@ -38,3 +38,25 @@ export interface CommentType extends Comment {
 export interface NotificationType extends Notification {
   user: UserType;
 }
+
+export interface PostProps {
+  postData: {
+    id: number;
+    author: {
+      avatar: string;
+      fullName: string;
+      id: number;
+    };
+    content: string;
+    createdAt?: string;
+    image?: string;
+    likeCount: number;
+    commentCount: number;
+    comments?: {
+      id: string;
+      author: { fullName: string; avatar: string };
+      content: string;
+      createdAt: string;
+    }[];
+  };
+}

@@ -1,141 +1,71 @@
 "use client";
 
 import PopupCard from "./PopupCard";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { formatDate } from "@/utils/formatdate";
-import { Maximize2, Heart, MessageCircle, Share2, Send } from "lucide-react";
+import { Maximize2, Heart, MessageCircle, Share2 } from "lucide-react";
 import { useUserContext } from "@/hooks/UserContext";
+import { PostProps } from "@/types/types";
+import ViewFullPostPopup from "../popup/ViewFullPostPopup";
 
-interface PostProps {
-  postData: {
-    id: number;
-    author: {
-      avatar: string;
-      fullName: string;
-      id : number;
-    };
-    content: string;
-    createdAt?: string;
-    image?: string;
-    likeCount: number;
-    commentCount: number;
-    comments?: {
-      id: string;
-      author: { fullName: string; avatar: string };
-      content: string;
-      createdAt: string;
-    }[];
-  };
-}
 
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);
-  const [commentText, setCommentText] = useState("");
-
-  async function addCommentfuc() {
-    try {
-      if (!commentText.trim()) return;
-      
-      const res = await fetch("/api/post/addcomment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ postId: postData.id, content: commentText, userId: postData.author?.id }),
-      });
-      console.log(res);
-      if (!res.ok) {
-        console.error("Failed to add comment");
-        return;
-      }
-      setCommentText("");
-    } catch (error) {
-      console.error("Error while adding comment", error);
-    }
-  }
 
   return (
     <div className="bg-gray-900 text-white p-4 rounded-xl shadow-md w-full max-w-xl mx-auto mt-4 relative">
       <button
-        className="absolute top-2 right-2 text-gray-400 hover:text-white cursor-pointer"
+        className="absolute top-2 right-2 text-gray-400 hover:text-white"
         onClick={() => setViewFullPost(true)}
+        aria-label="View full post"
       >
         <Maximize2 size={20} />
       </button>
 
       <div className="flex items-center gap-3 mb-2">
-        <img src={postData.author.avatar} alt="User Avatar" className="w-10 h-10 rounded-full" />
+        <img
+          src={postData.author.avatar}
+          alt={`${postData.author.fullName}'s avatar`}
+          className="w-10 h-10 rounded-full"
+        />
         <div>
           <h3 className="font-bold">{postData.author.fullName}</h3>
-          {postData.createdAt && <p className="text-gray-400 text-sm">{formatDate(postData.createdAt)}</p>}
+          {postData.createdAt && (
+            <p className="text-gray-400 text-sm">{formatDate(postData.createdAt)}</p>
+          )}
         </div>
       </div>
 
       <p className="mb-2">{postData.content}</p>
 
-      {postData.image && <img src={postData.image} alt="Post Media" className="w-full rounded-lg mt-2" />}
+      {postData.image && (
+        <img
+          src={postData.image}
+          alt="Post Media"
+          className="w-full rounded-lg mt-2"
+        />
+      )}
 
       <div className="flex justify-between items-center text-gray-400 mt-3 text-sm">
-        <button className="flex items-center gap-1 hover:text-blue-500">
+        <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Like">
           <Heart size={20} />
           <span>{postData.likeCount}</span>
         </button>
-        <button className="flex items-center gap-1 hover:text-blue-500">
+        <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Comment">
           <MessageCircle size={20} />
           <span>{postData.commentCount}</span>
         </button>
-        <button className="hover:text-blue-500">
+        <button className="hover:text-blue-500" aria-label="Share">
           <Share2 size={20} />
         </button>
       </div>
 
       {viewFullPost && (
-        <PopupCard isOpen={viewFullPost} closeModal={() => setViewFullPost(false)}>
-          <div className="h-[400px] overflow-auto p-4">
-            <div className="mb-4">
-              <div className="flex items-center gap-3">
-                <img src={postData.author.avatar} alt="User Avatar" className="w-12 h-12 rounded-full" />
-                <div>
-                  <h3 className="font-bold">{postData.author.fullName}</h3>
-                  {postData.createdAt && <p className="text-gray-400 text-sm">{formatDate(postData.createdAt)}</p>}
-                </div>
-              </div>
-              <p className="mt-3">{postData.content}</p>
-              {postData.image && <img src={postData.image} alt="Post Media" className="w-full rounded-lg mt-2" />}
-            </div>
-            <h4 className="font-semibold mb-2">Comments</h4>
-            <div className="space-y-3">
-              {postData.comments && postData.comments.length > 0 ? (
-                postData.comments.map((comment) => (
-                  <div key={comment.id} className="flex items-start gap-3 bg-gray-800 p-2 rounded-lg">
-                    <img src={comment.author.avatar} alt="Commenter Avatar" className="w-8 h-8 rounded-full" />
-                    <div>
-                      <h5 className="font-medium">{comment.author.fullName}</h5>
-                      <p className="text-gray-300 text-sm">{comment.content}</p>
-                      <p className="text-gray-500 text-xs">{formatDate(comment.createdAt)}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500 text-sm">No comments yet.</p>
-              )}
-
-              <div className="flex items-center gap-2 border border-gray-700 rounded-lg p-2 mt-3">
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  className="w-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                />
-                <button className="text-blue-500 hover:text-blue-600" onClick={addCommentfuc}>
-                  <Send size={20} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </PopupCard>
+        <ViewFullPostPopup 
+          postData={postData} 
+          setViewFullPost={setViewFullPost} 
+        />
       )}
     </div>
   );
 };
-
-export default PostComponent;

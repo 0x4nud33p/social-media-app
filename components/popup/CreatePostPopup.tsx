@@ -1,6 +1,6 @@
 "use client";
 import PopupCard from "@/components/ui/PopupCard";
-import PostCard from "@/components/ui/PostCard";
+import PostCard from "@/components/post/create/PostCard";
 
 interface CreatePostPopupProps {
   isOpen: boolean;
