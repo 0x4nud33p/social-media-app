@@ -12,7 +12,10 @@ const CommentSection: React.FC<PostProps> = ({ postData }) => {
     const fetchComments = async () => {
       try {
         const res = await fetch(`/api/post/${postData.id}/comments`);
-        if (!res.ok) throw new Error("Failed to fetch comments");
+        if (!res.ok){
+          throw new Error("Failed to fetch comments");
+          return;
+        }
         const data = await res.json();
         setComments(data);
       } catch (error) {
@@ -27,7 +30,7 @@ const CommentSection: React.FC<PostProps> = ({ postData }) => {
     if (!commentText.trim()) return;
 
     try {
-      const newComment = await addComment(commentText, postData.id, postData.author.id);
+      const newComment = await addComment(commentText, postData.id);
       setComments((prevComments) => [newComment, ...prevComments]);
       setCommentText("");
     } catch (error) {
