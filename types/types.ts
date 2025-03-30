@@ -45,7 +45,7 @@ export interface PostProps {
     author: {
       avatar: string;
       fullName?: string | null;
-      id: number;
+      id: number | string;
     };
     content: string;
     createdAt?: string;

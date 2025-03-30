@@ -8,10 +8,12 @@ import { useUserContext } from "@/hooks/UserContext";
 import { PostProps } from "@/types/types";
 import ViewFullPostPopup from "../popup/ViewFullPostPopup";
 import { addLike } from "@/lib/client_data_fetching/addLike";
+import { useUser } from "@clerk/nextjs";
 
 
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);
+  const { user } = useUser();
 
   return (
     <div className="bg-gray-900 text-white p-4 rounded-xl shadow-md w-full max-w-xl mx-auto mt-4 relative">
@@ -49,7 +51,7 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
 
       <div className="flex justify-between items-center text-gray-400 mt-3 text-sm">
         <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Like">
-          <button onClick={() => addLike({ postId: postData.id, userId: useUserContext().user.id })}>
+          <button onClick={() => addLike({ postId: postData.id, userId: user?.id })}>
             <Heart size={20} />
           </button>
           <span>{postData.likeCount}</span>

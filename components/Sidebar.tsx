@@ -26,19 +26,6 @@ const Sidebar = () => {
     setModalState((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const setUserData = async () => {
-    if (!user) return;
-    if (setUser) {
-      setUser({ clerkId: user.id, email: user.primaryEmailAddress?.emailAddress || "", fullName : user.fullName, username: user.username ?? user.id, avatar: user.imageUrl });
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      setUserData();
-    }
-  }, [user]);
-
   return (
     <aside className="w-full md:w-64 min-h-screen bg-[#0b1016] text-white p-4 border-r border-gray-700 fixed md:static left-0 top-0 flex flex-col">
       <SignedIn>
