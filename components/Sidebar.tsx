@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import sidebarItems from "@/config/sidebar";
 import SidebarItem from "./ui/SideBarItems";
 import { LogOut, User } from "lucide-react";
 import { useUserContext } from "@/hooks/UserContext";
 import { useClerk, SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
 import { ProfilePopup, NotificationsPopup, CreatePostPopup, SearchPopup } from "./popup/exports";
+import { toast } from "sonner";
 
 const Sidebar = () => {
   const { signOut } = useClerk();
-  const { setSelectedUser } = useUserContext();
+  const { setSelectedUser, setUser } = useUserContext();
   const { user } = useUser();
 
   const [modalState, setModalState] = useState({
@@ -24,6 +25,19 @@ const Sidebar = () => {
   const toggleModal = (key: ModalKeys) => {
     setModalState((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  const setUserData = async () => {
+    if (!user) return;
+    if (setUser) {
+      setUser({ clerkId: user.id, email: user.primaryEmailAddress?.emailAddress || "", fullName : user.fullName, username: user.username ?? user.id, avatar: user.imageUrl });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      setUserData();
+    }
+  }, [user]);
 
   return (
     <aside className="w-full md:w-64 min-h-screen bg-[#0b1016] text-white p-4 border-r border-gray-700 fixed md:static left-0 top-0 flex flex-col">

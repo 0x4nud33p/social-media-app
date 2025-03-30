@@ -1,4 +1,4 @@
-export async function addComment(commentText: string, postId: string, userId: string) {
+export async function addComment(commentText: string, postId: number, userId: number) {
   try {
     const res = await fetch("/api/post/addcomment", {
       method: "POST",

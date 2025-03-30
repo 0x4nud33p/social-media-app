@@ -49,7 +49,7 @@ const CommentSection: React.FC<PostProps> = ({ postData }) => {
               <div>
                 <h5 className="font-medium">{comment.author.fullName}</h5>
                 <p className="text-gray-300 text-sm">{comment.content}</p>
-                <p className="text-gray-500 text-xs">{formatDate(comment.createdAt)}</p>
+                <p className="text-gray-500 text-xs">{formatDate(JSON.stringify(comment.createdAt))}</p>
               </div>
             </div>
           ))

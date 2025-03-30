@@ -7,6 +7,7 @@ import { Maximize2, Heart, MessageCircle, Share2 } from "lucide-react";
 import { useUserContext } from "@/hooks/UserContext";
 import { PostProps } from "@/types/types";
 import ViewFullPostPopup from "../popup/ViewFullPostPopup";
+import { addLike } from "@/lib/client_data_fetching/addLike";
 
 
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
@@ -48,7 +49,9 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
 
       <div className="flex justify-between items-center text-gray-400 mt-3 text-sm">
         <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Like">
-          <Heart size={20} />
+          <button onClick={() => addLike({ postId: postData.id, userId: useUserContext().user.id })}>
+            <Heart size={20} />
+          </button>
           <span>{postData.likeCount}</span>
         </button>
         <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Comment">
@@ -69,3 +72,5 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
     </div>
   );
 };
+
+export default PostComponent
