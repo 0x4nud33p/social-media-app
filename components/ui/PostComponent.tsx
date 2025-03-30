@@ -51,7 +51,7 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
 
       <div className="flex justify-between items-center text-gray-400 mt-3 text-sm">
         <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Like">
-          <button onClick={() => addLike({ postId: postData.id, userId: user?.id })}>
+          <button onClick={() => addLike(postData.id)}>
             <Heart size={20} />
           </button>
           <span>{postData.likeCount}</span>

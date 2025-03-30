@@ -1,16 +1,11 @@
 import { toast } from "sonner";
 
-interface AddLikeProps {
-  postId: number;
-  userId: number;
-}
-
-export async function addLike({ postId, userId }: AddLikeProps) {
+export async function addLike(postId : number) {
   try {
     const res = await fetch("/api/post/addlike", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ postId, userId }),
+      body: JSON.stringify({ postId }),
     });
 
     if (!res.ok) {

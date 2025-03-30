@@ -86,9 +86,9 @@ model Notification {
 model Like {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  user      User     @relation(fields: [clerkId], references: [clerkId])
+  clerkId   String
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
-  @@unique([userId, postId])
+  @@unique([clerkId, postId])
 }
