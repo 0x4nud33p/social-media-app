@@ -10,31 +10,46 @@ type RecentPostsResponse = {
 export async function GET(req: NextRequest): Promise<NextResponse<RecentPostsResponse>> {
   try {
     const recentPosts = await prisma.post.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 30,
-      include: {
-        author: {
-          select: {
-            fullName: true,
-            avatar: true,
+    orderBy: { createdAt: "desc" },
+    take: 30,
+    include: {
+      author: {
+        select: {
+          fullName: true,
+          avatar: true,
+        },
+      },
+      comments: {
+        orderBy: { createdAt: "asc" },
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          author: {
+            select: {
+              fullName: true,
+              avatar: true,
+            },
           },
         },
-        comments : {
-          orderBy : { createdAt : "asc"},
-          select : {
-            id : true,
-            content: true,
-            createdAt: true,
-            author: {
-              select: {
-                fullName: true,
-                avatar: true,
-              },
-            },
-          }
-        }
       },
-    });
+      Like: {
+        select: {
+          user: {
+            select: {
+              id: true,
+              fullName: true,
+              username: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: { Like: true }, 
+      },
+    },
+  });
+
     //@ts-ignore
     return NextResponse.json({ data: recentPosts }, { status: 200 });
   } catch (error) {

@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Post not found." }, { status: 404 });
     }
 
-    const existingLike = await prisma.like.findUnique({
-      where: { clerkId_postId: { clerkId: user.id, postId } }, 
+    const existingLike = await prisma.like.findFirst({
+      where: { clerkId: user.id, postId },
     });
 
     if (existingLike) {
@@ -32,13 +32,18 @@ export async function POST(req: NextRequest) {
       data: {
         clerkId: user.id,
         postId,
+        user: { connect: { clerkId: user.id } }, 
+        post: { connect: { id: postId } },
       },
     });
 
     await prisma.post.update({
       where: { id: postId },
-      data: { likeCount: { increment: 1 } },
+      data: {
+        likeCount: { increment: 1 },
+      },
     });
+
     return NextResponse.json({ message: "Post liked successfully!" }, { status: 201 });
   } catch (error) {
     console.error("Error while liking the post:", error);

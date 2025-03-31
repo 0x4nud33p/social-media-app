@@ -1,7 +1,7 @@
 "use client";
 
 import PopupCard from "./PopupCard";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { formatDate } from "@/utils/formatdate";
 import { Maximize2, Heart, MessageCircle, Share2 } from "lucide-react";
 import { useUserContext } from "@/hooks/UserContext";
@@ -13,7 +13,6 @@ import { useUser } from "@clerk/nextjs";
 
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);
-  const { user } = useUser();
 
   return (
     <div className="bg-gray-900 text-white p-4 rounded-xl shadow-md w-full max-w-xl mx-auto mt-4 relative">

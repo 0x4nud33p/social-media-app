@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { PostType } from "@/types/types";
+import { useUser } from "@clerk/nextjs";
 
 export async function getPosts(
   userId: number | undefined,
@@ -11,7 +12,7 @@ export async function getPosts(
     const res = await fetch(userId ? `/api/posts?userId=${userId}` : "/api/posts");
 
     if (!res.ok) throw new Error("Failed to fetch posts");
-
+    
     const jsonResponse = await res.json();
     if (jsonResponse?.data) {
       setPosts(jsonResponse.data);

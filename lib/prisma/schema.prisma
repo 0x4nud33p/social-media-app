@@ -24,7 +24,6 @@ model User {
   followers Follow[] @relation("Followers")
   following Follow[] @relation("Following")
   Profile Profile[]
-  Post Post[] @relation("LikedPosts")
   Notification Notification[]
   Like Like[]
 }
@@ -59,10 +58,10 @@ model Post {
   commentCount Int       @default(0)
   author       User      @relation(fields: [authorId], references: [id])
   authorId     Int
-  likedBy      User[]    @relation("LikedPosts")
   comments     Comment[]
-  Like Like[]
+  Like         Like[] 
 }
+
 
 model Comment {
   id        Int      @id @default(autoincrement())
