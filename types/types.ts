@@ -58,5 +58,11 @@ export interface PostProps {
       content: string;
       createdAt: string;
     }[];
+    like?:{
+      id: number;
+      fullName : string;
+      clerkId : string;
+      username : string;
+    }[]
   };
 }

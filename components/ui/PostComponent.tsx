@@ -13,6 +13,9 @@ import { useUser } from "@clerk/nextjs";
 
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);
+  const { user } = useUser();
+  // const hasLiked = postData.?like?.some((like) => like.user.clerkId === user?.id);
+  const hasLiked = postData.like?.some((like) => like?.clerkId === user?.id );
 
   return (
     <div className="bg-gray-900 text-white p-4 rounded-xl shadow-md w-full max-w-xl mx-auto mt-4 relative">
@@ -50,9 +53,13 @@ const PostComponent: React.FC<PostProps> = ({ postData }) => {
 
       <div className="flex justify-between items-center text-gray-400 mt-3 text-sm">
         <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Like">
-          <button onClick={() => addLike(postData.id)}>
-            <Heart size={20} />
-          </button>
+          <div onClick={() => addLike(postData.id)}>
+            {hasLiked ? (
+              <Heart size={20} className="text-red-500" /> 
+            ) : (
+              <Heart size={20} className="text-gray-400" />
+            )}
+          </div>
           <span>{postData.likeCount}</span>
         </button>
         <button className="flex items-center gap-1 hover:text-blue-500" aria-label="Comment">

@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
       data: {
         clerkId: user.id,
         postId,
-        user: { connect: { clerkId: user.id } }, 
-        post: { connect: { id: postId } },
+        // user: { connect: { clerkId: user.id } }, 
+        // post: { connect: { id: postId } },
       },
     });
 

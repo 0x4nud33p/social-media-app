@@ -40,6 +40,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<RecentPostsRes
               id: true,
               fullName: true,
               username: true,
+              clerkId:true,
             },
           },
         },
