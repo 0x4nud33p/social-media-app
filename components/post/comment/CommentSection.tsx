@@ -1,23 +1,33 @@
-import { CommentType, PostProps } from "@/types/types";
+import { PostProps, UserType } from "@/types/types";
 import { formatDate } from "@/utils/formatdate";
 import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { addComment } from "@/lib/client_data_fetching/addComment";
 
+interface commentType {
+  author : UserType;
+  content : string;
+  createdAt : Date;
+  id : number;
+  authorId : number;
+}
+
 const CommentSection: React.FC<PostProps> = ({ postData }) => {
   const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState<CommentType[]>([]);
+  const [comments, setComments] = useState<commentType[]>([]);
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/post/${postData.id}/comments`);
+        const res = await fetch(`/api/post/getcomments?postId=${postData.id}`,{
+          method : "GET"
+        });
         if (!res.ok){
           throw new Error("Failed to fetch comments");
-          return;
         }
-        const data = await res.json();
-        setComments(data);
+        const { comments } = await res.json();
+        console.log(comments[0].createdAt);
+        setComments((prev) => [...prev, ...comments]);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -52,7 +62,7 @@ const CommentSection: React.FC<PostProps> = ({ postData }) => {
               <div>
                 <h5 className="font-medium">{comment.author.fullName}</h5>
                 <p className="text-gray-300 text-sm">{comment.content}</p>
-                <p className="text-gray-500 text-xs">{formatDate(JSON.stringify(comment.createdAt))}</p>
+                <p className="text-gray-500 text-xs">{formatDate(comment.createdAt)}</p>
               </div>
             </div>
           ))

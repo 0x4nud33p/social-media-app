@@ -13,7 +13,6 @@ const Feed = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { selectedUser, setSelectedUser } = useUserContext();
-  console.log(posts);
   const fetchPosts = useCallback(async () => {
     await getPosts(selectedUser?.id, setPosts, setIsLoading);
   }, [selectedUser]);
