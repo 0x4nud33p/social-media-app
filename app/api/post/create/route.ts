@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { title, content } = await req.json();
+    const { title, content,imageUrl } = await req.json();
     const user = await currentUser();
     if (!user || !user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
         title: title || "",
         content,
         authorId: existingUser.id,
+        imageUrl : imageUrl,
       },
     });
     return NextResponse.json(post, { status: 201 });

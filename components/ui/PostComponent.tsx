@@ -14,7 +14,6 @@ import { useUser } from "@clerk/nextjs";
 const PostComponent: React.FC<PostProps> = ({ postData }) => {
   const [viewFullPost, setViewFullPost] = useState(false);
   const { user } = useUser();
-  // const hasLiked = postData.?like?.some((like) => like.user.clerkId === user?.id);
   const hasLiked = postData.like?.some((like) => like?.clerkId === user?.id );
 
   return (

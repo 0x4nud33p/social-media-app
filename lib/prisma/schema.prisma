@@ -53,6 +53,7 @@ model Post {
   updatedAt    DateTime  @updatedAt
   title        String?   @db.VarChar(255)
   content      String?
+  imageUrl     String?
   published    Boolean   @default(false)
   likeCount    Int       @default(0)
   commentCount Int       @default(0)

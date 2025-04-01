@@ -5,13 +5,59 @@ import { useState } from "react";
 import { Camera  } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/Loading";
 
 // @dev to create a post
 export default function PostCard({closeModal} : any) {
   const [text, setText] = useState("");
   const [loading, setIsLoading] = useState(false);
+  const [uploadFileName, setUploadedFileName] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
+  const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
   const { user, isLoaded } = useUser();
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+  const handleImageUpload  = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      toast.error("Please select a valid image file.");
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type. Please upload a JPG or PNG image.");
+      return;
+    }
+
+    setImageLoading(true); 
+    setUploadedFileName(""); 
+    try {
+      const imageData = new FormData();
+      imageData.append("file", file);
+      imageData.append("upload_preset", "blogmediaupload");
+
+      const imageUploadResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dbghbvuhb/image/upload",
+        {
+          method : "POST",
+          body : JSON.stringify(imageData)
+        }
+      );
+      console.log(imageUploadResponse);
+      const imageUrl = imageUploadResponse?.data?.secure_url;
+      if (!imageUrl) throw new Error("Image upload failed.");
+
+      setImage(imageUrl);
+      setUploadedFileName(file.name);
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image. Please try again.");
+    } finally {
+      setImageLoading(false);
+    }
+  }
 
   const createPost = async () => {
     try {
@@ -24,6 +70,7 @@ export default function PostCard({closeModal} : any) {
         body: JSON.stringify({
           title: title || "",
           content: text,
+          imageUrl : image,
         }),
       });
       if (!response.ok) {
@@ -65,10 +112,24 @@ export default function PostCard({closeModal} : any) {
               onChange={(e) => setText(e.target.value)}
             />
             <div className="flex items-center space-x-4 mt-3">
-              <button className="p-2 rounded-full text-green-500 hover:bg-green-600/20">
-                <Camera size={20} />
-              </button>
-            </div>
+            <label htmlFor="imageUpload" className="p-2 rounded-full text-green-500 hover:bg-green-600/20 cursor-pointer">
+              <Camera size={20} />
+            </label>
+            <input
+              type="file"
+              id="imageUpload"
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+            {
+              imageLoading ? (
+                <Spinner />
+              ) : (
+                uploadFileName
+              )
+            }
+          </div>
           </div>
         </div>
       </div>
