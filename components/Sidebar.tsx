@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 const Sidebar = () => {
   const { signOut } = useClerk();
-  const { setSelectedUser, setUser } = useUserContext();
+  const { setSelectedUser } = useUserContext();
   const { user } = useUser();
 
   const [modalState, setModalState] = useState({
@@ -36,8 +36,8 @@ const Sidebar = () => {
       </SignedIn>
 
       <nav className="flex flex-col flex-grow space-y-2">
-        {sidebarItems.map(({ id, href, icon, label }) => (
-          <SidebarItem key={id} id={id} href={href} icon={icon} label={label} toggleModal={toggleModal} />
+        {sidebarItems.map(({ id, icon, label }) => (
+          <SidebarItem key={id} id={id} icon={icon} label={label} toggleModal={toggleModal} />
         ))}
       </nav>
 

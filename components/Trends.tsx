@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import MessageComponent from "./ui/MessageComponent";
-import RecentChats from "./ui/RecentChats";
 
 const Trends = () => {
   const [trends, setTrends] = useState([]);
@@ -21,7 +19,6 @@ const Trends = () => {
           <p className="text-gray-400 text-sm">No trending topics right now.</p>
         )}
       </ul>
-      <RecentChats />
       </div>
     </aside>
   );
