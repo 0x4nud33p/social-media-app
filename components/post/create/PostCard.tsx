@@ -2,23 +2,27 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Camera  } from "lucide-react";
+import { Camera } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/Loading";
 
 // @dev to create a post
-export default function PostCard({closeModal} : any) {
+interface PostCardProps {
+  closeModal: () => void;
+}
+
+export default function PostCard({ closeModal }: PostCardProps) {
   const [text, setText] = useState("");
   const [loading, setIsLoading] = useState(false);
-  const [uploadFileName, setUploadedFileName] = useState("");
+  const [uploadFileName, setUploadedFileName] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const { user, isLoaded } = useUser();
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 
-  const handleImageUpload  = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       toast.error("Please select a valid image file.");
@@ -30,25 +34,26 @@ export default function PostCard({closeModal} : any) {
       return;
     }
 
-    setImageLoading(true); 
-    setUploadedFileName(""); 
+    setImageLoading(true);
+    setUploadedFileName(null);
+
     try {
       const imageData = new FormData();
       imageData.append("file", file);
       imageData.append("upload_preset", "blogmediaupload");
 
-      const imageUploadResponse = await fetch(
+      const res = await fetch(
         "https://api.cloudinary.com/v1_1/dbghbvuhb/image/upload",
         {
-          method : "POST",
-          body : JSON.stringify(imageData)
+          method: "POST",
+          body: imageData,
         }
       );
-      console.log(imageUploadResponse);
-      const imageUrl = imageUploadResponse?.data?.secure_url;
-      if (!imageUrl) throw new Error("Image upload failed.");
 
-      setImage(imageUrl);
+      if (!res.ok) throw new Error("Image upload failed");
+
+      const data = await res.json();
+      setImage(data.secure_url);
       setUploadedFileName(file.name);
       toast.success("Image uploaded successfully!");
     } catch (error) {
@@ -57,9 +62,14 @@ export default function PostCard({closeModal} : any) {
     } finally {
       setImageLoading(false);
     }
-  }
+  };
 
   const createPost = async () => {
+    if (!text.trim() && !image) {
+      toast.error("Post cannot be empty!");
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await fetch("/api/post/create", {
@@ -70,21 +80,20 @@ export default function PostCard({closeModal} : any) {
         body: JSON.stringify({
           title: title || "",
           content: text,
-          imageUrl : image,
+          imageUrl: image || "",
         }),
       });
+
       if (!response.ok) {
         toast.error("Failed to create post");
         throw new Error("Failed to create post");
-      } else {
-        toast.success("Post created successfully!!");
-        closeModal();
       }
-      const data = await response.json();
+
+      toast.success("Post created successfully!");
+      closeModal();
     } catch (error) {
       console.error("Error:", error);
-    }
-    finally{
+    } finally {
       setIsLoading(false);
     }
   };
@@ -112,24 +121,21 @@ export default function PostCard({closeModal} : any) {
               onChange={(e) => setText(e.target.value)}
             />
             <div className="flex items-center space-x-4 mt-3">
-            <label htmlFor="imageUpload" className="p-2 rounded-full text-green-500 hover:bg-green-600/20 cursor-pointer">
-              <Camera size={20} />
-            </label>
-            <input
-              type="file"
-              id="imageUpload"
-              className="hidden"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-            {
-              imageLoading ? (
-                <Spinner />
-              ) : (
-                uploadFileName
-              )
-            }
-          </div>
+              <label
+                htmlFor="imageUpload"
+                className="p-2 rounded-full text-green-500 hover:bg-green-600/20 cursor-pointer"
+              >
+                <Camera size={20} />
+              </label>
+              <input
+                type="file"
+                id="imageUpload"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+              {imageLoading ? <Spinner /> : uploadFileName}
+            </div>
           </div>
         </div>
       </div>
@@ -137,8 +143,9 @@ export default function PostCard({closeModal} : any) {
       <button
         className="w-full max-w-lg py-2 rounded-xl text-white bg-blue-500 hover:bg-blue-600 transition hover:cursor-pointer"
         onClick={createPost}
+        disabled={loading}
       >
-        Post
+        {loading ? <Spinner /> : "Post"}
       </button>
     </div>
   );
